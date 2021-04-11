@@ -1,0 +1,6 @@
+diverses.lib
+.L[-J]	; neue Lib
+
+=
+
+diverses.c

@@ -1,0 +1,1 @@
+#include <Semaphore.h>asm int16 get_Semaphore(__A0(int16 *semaphore)){	tas (a0)	bne.s cannot_get	moveq #1,d0	rtscannot_get:	moveq #0,d0	rts}

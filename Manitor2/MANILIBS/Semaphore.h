@@ -1,0 +1,1 @@
+#ifndef __ManiLibs_Semaphore_h__#define __ManiLibs_Semaphore_h__#ifndef __PORTAB__#include <portab.h>#endifextern C_CALL int16 get_Semaphore(__A0(int16 *semaphore));#endif
