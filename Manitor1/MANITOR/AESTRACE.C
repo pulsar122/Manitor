@@ -1,11 +1,11 @@
 #include "manitor.h"
-#include <manilibs\aes\aes.h>
+#include "..\toslib\aes\aes.h"
 #include <stdlib.h>
 #include <string.h>
 #include "gscript.h"
-#include <manilibs\aes\av_msg.h>
-#include <manilibs\aes\olga.h>
-#include <manilibs\aes\bubblgem.h>
+#include "..\toslib\aes\av_msg.h"
+#include "..\toslib\aes\olga.h"
+#include "..\toslib\aes\bubblgem.h"
 
 int aes_is_traced = DEFAULT_AES_TRACE;
 int show_snd_messages = DEFAULT_SHOW_SND_MSG;
@@ -18,6 +18,7 @@ AESFUNCS aes_funcs;
 /* ACHTUNG: Funktionen mÅssen nach Opcode sortiert sein!!!! */
 
 AESFUNC aes_func[] = {
+	{ 0, 1, 0, NO_SUBCODE, NO_SUBCODE, "recalc_cicon_colours", 1, {{ADDRIN, 0, T_ADR, "palette"}}, 0, {0}, FALSE },
 	{10, 0, 0, NO_SUBCODE, NO_SUBCODE, "appl_init", 0, {0}, 1, {{INTOUT, 0, T_INT, "apid"}}, FALSE},
 	{11, 2, 1, NO_SUBCODE, NO_SUBCODE, "appl_read", 3, {{INTIN, 0, T_AESID, "apid"}, {INTIN, 1, T_INT, "len"}, {ADDRIN, 0, T_ADR, "buf"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
 	{12, 2, 1, NO_SUBCODE, NO_SUBCODE, "appl_write", 3, {{INTIN, 0, T_AESID, "apid"}, {INTIN, 1, T_INT, "len"}, {ADDRIN, 0, T_ADR, "buf"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
@@ -26,7 +27,7 @@ AESFUNC aes_func[] = {
 	{15, 1, 1, NO_SUBCODE, NO_SUBCODE, "appl_trecord", 2, {{ADDRIN, 0, T_ADR, "buf"}, {INTIN, 0, T_INT, "len"}}, 1, {{INTOUT, 0, T_INT, "count"}}, FALSE},
 	{16, 2, 0, NO_SUBCODE, NO_SUBCODE, "appl_bvset", 2, {{INTIN, 0, T_INT, "disk"}, {INTIN, 1, T_INT, "hard"}}, 0, {0}, FALSE},
 	{17, 0, 0, NO_SUBCODE, NO_SUBCODE, "appl_yield", 0, {0}, 0, {0}, FALSE},
-	{18, 1, 1, NO_SUBCODE, NO_SUBCODE, "appl_search", 2, {{INTIN, 0, T_INT, "mode"}, {ADDRIN, 0, T_ADR, "buf"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
+	{18, 1, 1, NO_SUBCODE, NO_SUBCODE, "appl_search", 2, {{INTIN, 0, T_INT, "mode"}, {ADDRIN, 0, T_ADR, "buf"}}, 3, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "type"}, {INTOUT, 2, T_INT, "id"}}, FALSE},
 	{19, 0, 0, NO_SUBCODE, NO_SUBCODE, "appl_exit", 0, {0}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
 	{20, 0, 0, NO_SUBCODE, NO_SUBCODE, "evnt_keybd", 0, {0}, 1, {{INTOUT, 0, T_KEY, "key"}}, FALSE},
 	{21, 3, 0, NO_SUBCODE, NO_SUBCODE, "evnt_button", 3, {{INTIN, 1, T_INT, "nclicks"}, {INTIN, 2, T_INT, "mask"}, {INTIN, 3, T_INT, "state"}}, 5, {{INTOUT, 0, T_INT, "clicks"}, {INTOUT, 1, T_INT, "x"}, {INTOUT, 2, T_INT, "y"},
@@ -88,6 +89,8 @@ AESFUNC aes_func[] = {
 																	3, {{INTOUT, 0, T_INT, "continue"}, {INTOUT, 1, T_INT, "nxtobj"}, {INTOUT, 2, T_INT, "nxtchar"}}, FALSE},
 	{65, 5, 1, NO_SUBCODE, NO_SUBCODE, "objc_wedit", 6, {{ADDRIN, 0, T_ADR, "tree"}, {INTIN, 0, T_INT, "obj"}, {INTIN, 1, T_KEY, "key"}, {INTIN, 2, T_INT, "xpos"}, {INTIN, 3, T_INT, "subfn"}, {INTIN, 4, T_INT, "whnd"}},
 																	2, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "xpos"}}, FALSE},
+	{69, 4, 1, NO_SUBCODE, NO_SUBCODE, "graf_mutlirubber", 5, {{INTIN, 0, T_INT, "x"}, {INTIN, 1, T_INT, "y"}, {INTIN, 2, T_INT, "minw"}, {INTIN, 3, T_INT, "minh"}, {ADDRIN, 0, T_GRECT, "rec"}},
+																			 3, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "outw"}, {INTOUT, 2, T_INT, "outh"}}, FALSE},
 	{70, 4, 0, NO_SUBCODE, NO_SUBCODE, "graf_rubbox", 4, {{INTIN, 0, T_INT, "x"}, {INTIN, 1, T_INT, "y"}, {INTIN, 2, T_INT, "min_w"}, {INTIN, 3, T_INT, "min_h"}},
 																		3, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "last_w"}, {INTOUT, 2, T_INT, "last_h"}}, FALSE},
 	{71, 8, 0, NO_SUBCODE, NO_SUBCODE, "graf_dragbox", 8, {{INTIN, 0, T_INT, "w"}, {INTIN, 1, T_INT, "h"}, {INTIN, 2, T_INT, "x"}, {INTIN, 3, T_INT, "y"}, {INTIN, 4, T_INT, "boundx"}, {INTIN, 5, T_INT, "boundy"},
@@ -111,6 +114,7 @@ AESFUNC aes_func[] = {
 	{82, 0, 0, NO_SUBCODE, NO_SUBCODE, "scrp_clear", 0, {0}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
 	{90, 0, 2, NO_SUBCODE, NO_SUBCODE, "fsel_input", 2, {{ADDRIN, 0, T_STR, "path"}, {ADDRIN, 1, T_STR, "mask"}}, 2, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "button"}}, FALSE},
 	{91, 0, 3, NO_SUBCODE, NO_SUBCODE, "fsel_exinput", 3, {{ADDRIN, 0, T_STR, "path"}, {ADDRIN, 1, T_STR, "mask"}, {ADDRIN, 2, T_STR, "label"}}, 2, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "button"}}, FALSE},
+	{99, 2, 1, NO_SUBCODE, NO_SUBCODE, "wind_draw", 2, {{INTIN, 0, T_INT, "whnd"}, {INTIN, 1, T_INT, "wi_dstartob"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
 	{100, 5, 0, NO_SUBCODE, NO_SUBCODE, "wind_create", 5, {{INTIN, 0, T_WKIND, "kind"}, {INTIN, 1, T_INT, "max_x"}, {INTIN, 2, T_INT, "max_y"}, {INTIN, 3, T_INT, "max_w"}, {INTIN, 4, T_INT, "max_h"}}, 1, {{INTOUT, 0, T_INT, "whnd"}}, FALSE},
 	{101, 5, 0, NO_SUBCODE, NO_SUBCODE, "wind_open", 5, {{INTIN, 0, T_INT, "whnd"}, {INTIN, 1, T_INT, "x"}, {INTIN, 2, T_INT, "y"}, {INTIN, 3, T_INT, "w"}, {INTIN, 4, T_INT, "h"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
 	{102, 1, 0, NO_SUBCODE, NO_SUBCODE, "wind_close", 1, {{INTIN, 0, T_INT, "whnd"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
@@ -139,6 +143,7 @@ AESFUNC aes_func[] = {
 	{125, 0, 2, NO_SUBCODE, NO_SUBCODE, "shel_envrn", 2, {{ADDRIN, 0, T_ADR, "&val"}, {ADDRIN, 1, T_STR, "name"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
 	{126, 0, 2, NO_SUBCODE, NO_SUBCODE, "shel_rdef", 2, {{ADDRIN, 0, T_ADR, "name"}, {ADDRIN, 1, T_ADR, "dir"}}, 0, {0}, FALSE},
 	{127, 0, 2, NO_SUBCODE, NO_SUBCODE, "shel_wdef", 2, {{ADDRIN, 0, T_STR, "name"}, {ADDRIN, 1, T_STR, "dir"}}, 0, {0}, FALSE},
+	{129, 2, 1, NO_SUBCODE, NO_SUBCODE, "appl_control", 3, {{INTIN, 0, T_INT, "ap_cid"}, {INTIN, 1, T_INT, "ap_cwhat"}, {ADDRIN, 0, T_ADR, "ap_count"}}, 1, {{INTOUT, 0, T_INT, "ok"}}, FALSE},
 	{130, 1, 0, NO_SUBCODE, NO_SUBCODE, "appl_getinfo", 1, {{INTIN, 0, T_INT, "type"}}, 5, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "o1"}, {INTOUT, 2, T_INT, "o2"}, {INTOUT, 3, T_INT, "o3"}, {INTOUT, 4, T_INT, "o4"}}, FALSE},
 	{130, 6, 0, NO_SUBCODE, NO_SUBCODE, "xgrf_stepcalc", 6, {{INTIN, 0, T_INT, "orgw"}, {INTIN, 1, T_INT, "orgh"}, {INTIN, 2, T_INT, "xc"}, {INTIN, 3, T_INT, "yc"}, {INTIN, 4, T_INT, "w"}, {INTIN, 5, T_INT, "h"}},
 																		6, {{INTOUT, 0, T_INT, "ok"}, {INTOUT, 1, T_INT, "cx"}, {INTOUT, 2, T_INT, "cy"}, {INTOUT, 3, T_INT, "cnt"}, {INTOUT, 4, T_INT, "xstep"}, {INTOUT, 5, T_INT, "ystep"}}, FALSE},
@@ -308,7 +313,7 @@ GEM_MSG gem_msg[] = {
 	{SC_CHANGED, "SC_CHANGED", 2, {{3, T_INT_HEX, "format"}, {4, T_EXT, "ext"}}, FALSE},
 	{PRN_CHANGED, "PRN_CHANGED", 2, {{3, T_INT, "dev"}, {4, T_INT, "val"}}, FALSE},
 	{FNT_CHANGED, "FNT_CHANGED", 2, {{3, T_INT, "removed"}, {4, T_INT, "added"}}, FALSE},
-	{THR_EXIT, "THR_EXIT", 0, {0}, FALSE},		/* ????????? */
+	{THR_EXIT, "THR_EXIT", 2, {{3, T_INT, "AES-ID"}, {4, T_LONG, "errcode"}}, FALSE},		/* MagiC Thread */
 	{PA_EXIT, "PA_EXIT", 0, {0}, FALSE},		/* ????????? */
 	{CH_EXIT, "CH_EXIT", 2, {{3, T_AESID, "apid"}, {4, T_INT, "ret"}}, FALSE},
 	{WM_M_BDROPPED, "WM_M_BDROPPED", 1, {{3, T_INT, "whnd"}}, FALSE},
@@ -454,19 +459,22 @@ GEM_MSG gem_msg[] = {
 	{0x7a19, "FONT_SELECT", 5, {{3, T_INT, "whnd"}, {4, T_INT, "id"}, {5, T_INT, "pt"}, {6, T_INT, "col"}, {7, T_INT_HEX, "effects"}}, FALSE},
 	{0x7a1a, "FONT_ACK", 1, {{3, T_INT, "ok"}}, FALSE},
 	{0x7a1b, "XFONT_CHANGED", 4, {{3, T_LONG, "fix31"}, {5, T_INT, "rot"}, {6, T_INT, "italic"}, {7, T_INT_HEX, "kern/width"}}, FALSE},
-	{0xcab0, "CAB_CHANGED", 0, {0L}, FALSE},	/* ??? */
-	{0xcab1, "CAB_EXIT", 0, {0L}, FALSE},		/* ??? */
-	{0xcab2, "CAB_PATH", 0, {0L}, FALSE},		/* ??? */
-	{0xcab3, "CAB_VIEW", 0, {0L}, FALSE},		/* ??? */
-	{0xcab4, "CAB_TERM", 0, {0L}, FALSE},		/* ??? */
-	{0xcab5, "CAB_5", 0, {0L}, FALSE},			/* ??? */
-	{0xcab6, "CAB_6", 0, {0L}, FALSE},			/* ??? */
-	{0xcab7, "CAB_7", 0, {0L}, FALSE},			/* ??? */
-	{0xcab8, "CAB_8", 0, {0L}, FALSE},			/* ??? */
-	{0xcab9, "CAB_9", 0, {0L}, FALSE},			/* ??? */
-	{0xcaba, "CAB_A", 0, {0L}, FALSE},			/* ??? */
-	{0xcabb, "CAB_B", 0, {0L}, FALSE},			/* ??? */
-	{0xcabc, "CAB_C", 0, {0L}, FALSE},			/* ??? */
+	{0x8000, "CatMsg", 1, {{3, T_INT, "sub-code"}}, FALSE},			/* CAT-Protokoll */
+	{0x8001, "ExtCatMsg", 0, {0}, FALSE},									/* CAT-Protokoll */
+	{0x8002, "Cat2FiltMsg", 0, {0}, FALSE},								/* CAT-Protokoll */
+	{0x8003, "CatProtoMsg", 1, {{3, T_INT, "sub-code"}}, FALSE},	/* CAT-Protokoll */
+	{0xcab0, "CAB_CHANGED", 0, {0}, FALSE},													/* CAB-Protokoll */
+	{0xcab1, "CAB_EXIT", 0, {0}, FALSE},														/* CAB-Protokoll */
+	{0xcab2, "CAB_PATH", 0, {0}, FALSE},														/* CAB-Protokoll */
+	{0xcab3, "CAB_VIEW", 2, {{3, T_ADR, "buf"}, {5, T_INT, "Fenster"}}, FALSE},	/* CAB-Protokoll */
+	{0xcab4, "CAB_TERM", 0, {0}, FALSE},														/* CAB-Protokoll */
+	{0xcab5, "CAB_REQUESTSTATUS", 0, {0}, FALSE},											/* CAB-Protokoll */
+	{0xcab6, "CAB_STATUS", 1, {{3, T_INT, "Online"}}, FALSE},							/* CAB-Protokoll */
+	{0xcab7, "CAB_RELEASESTATUS", 0, {0}, FALSE},											/* CAB-Protokoll */
+	{0xcab8, "CAB_HELLO", 3, {{3, T_INT_HEX, "Version"}, {4, T_INT, "Protokolle"}, {5, T_INT, "Nachrichten"}}, FALSE},			/* CAB-Protokoll */
+	{0xcab9, "CAB_MAIL", 3, {{3, T_ADR, "URL"}, {5, T_ADR, "Mail"}, {4, T_INT, "Optionen"}}, FALSE},			/* CAB-Protokoll */
+	{0xcaba, "CAB_MAILSENT", 2, {{3, T_INT, "Fehler"}, {4, T_INT, "Fehlernummer"}}, FALSE},			/* CAB-Protokoll */
+	{0xcabb, "CAB_SUPPORT", 0, {0}, FALSE},													/* CAB-Protokoll */
 	{0xcabd, "CAB_D", 0, {0L}, FALSE},			/* ??? */
 	{0xcabe, "CAB_E", 0, {0L}, FALSE},			/* ??? */
 	{0xcabf, "CAB_F", 0, {0L}, FALSE},			/* ??? */
@@ -474,7 +482,7 @@ GEM_MSG gem_msg[] = {
 	{0x0936, "DO_WPOPUP", 0, {0L}, FALSE},		/* ??? */
 	{0x0997, "WISEL_MSG", 0, {0L}, FALSE},		/* ??? */
 	{0x0998, "MSG_NOEVENT", 0, {0L}, FALSE},
-	{0x0999, "WINCOM_MSG", 0, {0L}, FALSE},			/* ??? */
+	{0x0999, "WINCOM_MSG", 3, {{3, T_INT, "Kommando"}, {4, T_INT, "ID/Option"}, {5, T_INT, "ID"}}, FALSE},		/* WinCom */
 	{0x1235, "GO_PRIVATE", 1, {{3, T_INT, "subcode"}}, FALSE},
 	{0x4560, "FILE_SELECTED", 0, {0L}, FALSE},		/* ??? */
 	{0x46ff, "THING_MSG", 0, {0L}, FALSE},				/* ??? */
@@ -619,12 +627,13 @@ evtl. getracten evnt-Routinen zurÅckgekehrt wird! */
 void deinit_broadcast(void)
 {
 	if (aesinfo.applsearch) {
-		static int msg[8] = {MSG_NOEVENT, 0, 0, 0, 0, 0, 0, 0};
+		static int16 msg[8] = {MSG_NOEVENT, 0, 0, 0, 0, 0, 0, 0};
 		char name[9];
-		int type;
-		int id;
-		int mode = 0;	/* erste */
-		while (MT_appl_search(mode, name, &type, &id, global) == 1) {
+		int16 type;
+		int16 id;
+		int16 mode = 0;	/* erste */
+
+		while (appl_search(mode, name, &type, &id, global) == 1) {
 			my_appl_write(id, msg);
 			mode = 1;	/* nÑchste */
 		}
@@ -710,6 +719,7 @@ GEM_APP *find_gem_app(int id)
 {
 	GEM_APP *app = gem_app;
 	int i;
+
 	for(i = 0; i < gem_app_anz; i++, app++) {
 		if (app->gueltig && app->id == id)
 			return app;
@@ -984,10 +994,11 @@ void update_gem_apps(void)
 		int neu = FALSE;
 		GEM_APP *app;
 		char name[9];
-		int type;
-		int id;
-		int mode = 0;	/* erste */
-		while (MT_appl_search(mode, name, &type, &id, global) == 1) {
+		int16 type;
+		int16 id;
+		int16 mode = 0;	/* erste */
+
+		while (appl_search(mode, name, &type, &id, global) == 1) {
 			app = find_gem_app(id);
 			if (!app) {
 				app = find_free_app();

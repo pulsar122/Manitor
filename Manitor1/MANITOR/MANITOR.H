@@ -5,9 +5,9 @@
 #include <portab.h>
 #endif
 
-#include <manilibs\sysinfo\sysinfo.h>
+#include "..\manilibs\sysinfo\sysinfo.h"
 
-extern int global[15];
+extern int16 global[15];
 extern SYSINFO sysinfo;
 extern AESINFO aesinfo;
 

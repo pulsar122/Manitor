@@ -7,9 +7,9 @@
 #include <portab.h>
 #endif
 
-#include <manilibs\aes\aes.h>
-#include <manilibs\kette\kette.h>
-#include <manilibs\dynblock\dynblock.h>
+#include "..\toslib\aes\aes.h"
+#include "..\manilibs\kette\kette.h"
+#include "..\manilibs\dynblock\dynblock.h"
 #include <time.h>
 
 #define GS_VERSION	0x0100	/* Eigene unterstÅtzte GEMScript-Version */
@@ -52,7 +52,7 @@ extern GS_INFO *my_gs_info;	/* Eigene GS_INFO-Struktur (wird bei gs_init allozie
 int gs_init(void);		/* GEMScript initialisieren */
 void gs_deinit(void);	/* GEMScript deinitialisieren */
 
-int gs_messages(int *msg);	/* Auswertung der GEMScript-Messages */
+int gs_messages(int16 *msg);	/* Auswertung der GEMScript-Messages */
 
 
 /* Nîtige Vereinbarungen fÅr konkrete Implementation: */
@@ -75,19 +75,19 @@ extern KETTE gs_partner;	/* verkettete Liste connecteter GEMScript-Partner (Glie
 
 GS_PARTNER *find_gs_partner(int pid, int subid);	/* connecteten Partner suchen */
 
-int my_appl_write(int pid, int *msg);
+int my_appl_write(int pid, int16 *msg);
 
 /** msg-Buffer fÅr verschiedene Messages ausfÅllen: **/
 
-void gs_fill_request(int *msg, int subid);
-void gs_fill_reply(int *msg, int subid, int error);
-void gs_fill_quit(int *msg, int subid);
-void gs_fill_command(int *msg, char *ptr, int subid);
-void gs_fill_ack(int *msg, char *ptr1, char *ptr2, int ret);
-void gs_fill_openmacro(int *msg, char *ptr);
-void gs_fill_macro(int *msg, char *ptr, int id, int ret);
-void gs_fill_write(int *msg, char *ptr, int id);
-void gs_fill_closemacro(int *msg, int id);
+void gs_fill_request(int16 *msg, int subid);
+void gs_fill_reply(int16 *msg, int subid, int error);
+void gs_fill_quit(int16 *msg, int subid);
+void gs_fill_command(int16 *msg, char *ptr, int subid);
+void gs_fill_ack(int16 *msg, char *ptr1, char *ptr2, int ret);
+void gs_fill_openmacro(int16 *msg, char *ptr);
+void gs_fill_macro(int16 *msg, char *ptr, int id, int ret);
+void gs_fill_write(int16 *msg, char *ptr, int id);
+void gs_fill_closemacro(int16 *msg, int id);
 
 /* Strukturen zur Verwaltung der Kommandos: */
 
@@ -110,7 +110,7 @@ typedef struct
 typedef struct
 {
 	char *cmdkey;	/* Das Kommando */
-	int (*funk)(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
+	int (*funk)(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
 						/* Zeiger auf die zugehîrige Funktion */
 } GSCMD;
 
@@ -173,41 +173,41 @@ void Dock_ack(char *mycmd, char *ack);
 
 /* Prototypen der Kommando-Funktionen: */
 
-int gsfunc_terminate(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_activate(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_deactivate(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_preset(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_aes(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_msg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_vdi(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_gemdos(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_xbios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_bios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_opcode(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_timer(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_set_file(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_set_timer(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_set_bufsize(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide_aes(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide_vdi(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide_gemdos(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide_xbios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide_bios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show_aes(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show_vdi(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show_gemdos(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show_xbios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show_bios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide_msg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show_msg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_hide_prg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_show_prg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_exclude_prgs(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_include_prgs(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_clear_prgfilter(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_AppGetLongName(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
-int gsfunc_notify(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p);
+int gsfunc_terminate(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_activate(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_deactivate(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_preset(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_aes(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_msg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_vdi(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_gemdos(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_xbios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_bios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_opcode(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_timer(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_set_file(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_set_timer(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_set_bufsize(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide_aes(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide_vdi(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide_gemdos(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide_xbios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide_bios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show_aes(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show_vdi(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show_gemdos(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show_xbios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show_bios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide_msg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show_msg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_hide_prg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_show_prg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_exclude_prgs(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_include_prgs(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_clear_prgfilter(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_AppGetLongName(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
+int gsfunc_notify(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p);
 
 #endif

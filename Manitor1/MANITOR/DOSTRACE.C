@@ -2,8 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "gscript.h"
-#include <manilibs\aes\olga.h>
-#include <manilibs\aes\av_msg.h>
+#include "..\toslib\aes\olga.h"
+#include "..\toslib\aes\av_msg.h"
 #include <stdio.h>
 
 int gemdos_is_traced = DEFAULT_GEMDOS_TRACE;
@@ -926,7 +926,7 @@ void show_funcpara(int typ, char *name, void **ptr)
 		fillbuf_para(name);
 		{
 			VDIPB *pb = *(VDIPB **)ptr;
-			int *pt = pb->ptsin;
+			int16 *pt = pb->ptsin;
 			int i = pb->contrl[1];
 			while (--i >= 0) {
 				fillbuf("[", 1);
@@ -944,7 +944,7 @@ void show_funcpara(int typ, char *name, void **ptr)
 		{
 			VDIPB *pb = *(VDIPB **)ptr;
 			int c;
-			int *pt = &pb->intin[name[0]];	/* !!! */
+			int16 *pt = &pb->intin[name[0]];	/* !!! */
 			int i = pb->contrl[3] - name[0];	/* !!! */
 			fillbuf("¯", 1);
 			while (--i >= 0) {
@@ -974,7 +974,7 @@ void show_funcpara(int typ, char *name, void **ptr)
 	case T_V_BEZ:
 		{
 			VDIPB *pb = *(VDIPB **)ptr;
-			int *pt = pb->ptsin;
+			int16 *pt = pb->ptsin;
 			int swap = 1;
 			char *typ = (char *)&pb->intin[0];
 			int i = pb->contrl[1];

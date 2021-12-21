@@ -58,11 +58,11 @@ GSCMD gs_kommandos[] = {
 /* Hilfsfunktion um Messages bequemer abzuschicken */
 /* Fllt eigene apid und msg[2] selbst„ndig aus */
 /* Return: 0 = Fehler */
-int my_appl_write(int pid, int *msg)
+int my_appl_write(int pid, int16 *msg)
 {
 	msg[1] = apid;
 	msg[2] = 0;
-	return MT_appl_write(pid, 16, msg, global);
+	return appl_write(pid, 16, msg, global);
 }
 
 
@@ -95,7 +95,7 @@ int gs_init(void)
 
 void gs_deinit(void)
 {
-	int msg[8];
+	int16 msg[8];
 	GS_PARTNER *p = (GS_PARTNER *)gs_partner.first;
 
 	delete_Dock_items();
@@ -156,7 +156,7 @@ void gs_partner_freefunc(GLIED *glied)
 /* Liefert TRUE, wenn GEMScript-Message erkannt wurde          */
 /* Inhalt von msg wird bei GEMScript-Messages evtl. ver„ndert! */
 
-int gs_messages(int *msg)
+int gs_messages(int16 *msg)
 {
 	int pid = msg[1];
 	int subid = msg[7];	/* Achtung! Gilt nicht bei GS_ACK!!! */
@@ -374,7 +374,7 @@ GSBUFFER *find_gsbuffer(int pid, void *adr)
 
 /** msg-Buffer fr verschiedene Messages ausfllen: **/
 
-void gs_fill_request(int *msg, int subid)
+void gs_fill_request(int16 *msg, int subid)
 {
 	msg[0] = GS_REQUEST;
 	*(GS_INFO **)&msg[3] = my_gs_info;
@@ -382,7 +382,7 @@ void gs_fill_request(int *msg, int subid)
 	msg[7] = subid;
 }
 
-void gs_fill_reply(int *msg, int subid, int error)
+void gs_fill_reply(int16 *msg, int subid, int error)
 {
 	msg[0] = GS_REPLY;
 	*(GS_INFO **)&msg[3] = my_gs_info;
@@ -391,7 +391,7 @@ void gs_fill_reply(int *msg, int subid, int error)
 	msg[7] = subid;
 }
 
-void gs_fill_quit(int *msg, int subid)
+void gs_fill_quit(int16 *msg, int subid)
 {
 	msg[0] = GS_QUIT;
 	*(long *)&msg[3] = 0L;
@@ -399,7 +399,7 @@ void gs_fill_quit(int *msg, int subid)
 	msg[7] = subid;
 }
 
-void gs_fill_command(int *msg, char *ptr, int subid)
+void gs_fill_command(int16 *msg, char *ptr, int subid)
 {
 	msg[0] = GS_COMMAND;
 	*(char **)&msg[3] = ptr;
@@ -407,7 +407,7 @@ void gs_fill_command(int *msg, char *ptr, int subid)
 	msg[7] = subid;
 }
 
-void gs_fill_ack(int *msg, char *ptr1, char *ptr2, int ret)
+void gs_fill_ack(int16 *msg, char *ptr1, char *ptr2, int ret)
 {
 	msg[0] = GS_ACK;
 	*(char **)&msg[3] = ptr1;
@@ -415,7 +415,7 @@ void gs_fill_ack(int *msg, char *ptr1, char *ptr2, int ret)
 	msg[7] = ret;
 }
 
-void gs_fill_openmacro(int *msg, char *ptr)
+void gs_fill_openmacro(int16 *msg, char *ptr)
 {
 	msg[0] = GS_OPENMACRO;
 	*(char **)&msg[3] = ptr;
@@ -423,7 +423,7 @@ void gs_fill_openmacro(int *msg, char *ptr)
 	msg[7] = 0;
 }
 
-void gs_fill_macro(int *msg, char *ptr, int id, int ret)
+void gs_fill_macro(int16 *msg, char *ptr, int id, int ret)
 {
 	msg[0] = GS_MACRO;
 	*(char **)&msg[3] = ptr;
@@ -432,7 +432,7 @@ void gs_fill_macro(int *msg, char *ptr, int id, int ret)
 	msg[7] = 0;
 }
 
-void gs_fill_write(int *msg, char *ptr, int id)
+void gs_fill_write(int16 *msg, char *ptr, int id)
 {
 	msg[0] = GS_WRITE;
 	*(char **)&msg[3] = ptr;
@@ -440,7 +440,7 @@ void gs_fill_write(int *msg, char *ptr, int id)
 	*(long *)&msg[6] = 0L;
 }
 
-void gs_fill_closemacro(int *msg, int id)
+void gs_fill_closemacro(int16 *msg, int id)
 {
 	msg[0] = GS_CLOSEMACRO;
 	*(long *)&msg[3] = 0L;
@@ -476,12 +476,13 @@ void create_Dock_items(int only_changed)
 {
 	if (dock_is_connected) {
 		int an;
-		int msg[8];
+		int16 msg[8];
 		DOCK_ITEM *item = &dock_item[0];
 		int id = 0;
 		char *buf;
 		GSBUFFER *merk;
 		int len;
+
 		while (item->name) {
 			if (id == DOCK_STARTSTOP) {
 				if (hooked) {
@@ -494,9 +495,9 @@ void create_Dock_items(int only_changed)
 				an = FALSE;
 
 				/* Maximal: "replaceItem\0<id>\0  <name>\0\0" */
-				len = 11 + 1 + 2 + strlen(item->name) + 2;
+				len = 11 + 1 + 2 + (int) strlen(item->name) + 2;
 				if (item->id) {	/* Bereits in Dock eingetragen */
-					len += strlen(item->id) + 1;
+					len += (int) strlen(item->id) + 1;
 				}
 				buf = xalloc(len, RAM_BETTER_ST|RAM_GLOBAL, &sysinfo);
 				if (buf) {
@@ -543,15 +544,16 @@ void create_Dock_items(int only_changed)
 
 void delete_Dock_items(void)
 {
-	int msg[8];
+	int16 msg[8];
 	DOCK_ITEM *item = &dock_item[0];
 	char *buf;
 	GSBUFFER *merk;
 	int len;
+
 	while (item->name) {
 		if (item->id) {
 			/* Maximal: "deleteItem\0<id>\0\0" */
-			len = 10 + 1 + strlen(item->id) + 2;
+			len = 10 + 1 + (int) strlen(item->id) + 2;
 			buf = xalloc(len, RAM_BETTER_ST|RAM_GLOBAL, &sysinfo);
 			if (buf) {
 				merk = merk_gsbuffer(dock_pid, buf, 0L, 0L);
@@ -600,13 +602,13 @@ void Dock_ack(char *mycmd, char *ack)
 
 #pragma warn -par
 
-int gsfunc_terminate(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_terminate(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	terminate(FALSE);
 	return GSACK_OK;
 }
 
-int gsfunc_activate(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_activate(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	int back = activate();
 	if (back) {
@@ -617,25 +619,25 @@ int gsfunc_activate(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
 	return GSACK_OK;
 }
 
-int gsfunc_deactivate(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_deactivate(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	if (deactivate(FALSE))
 		dyn_add_string00(&ret->dyn, "1");
 	return GSACK_OK;
 }
 
-int gsfunc_preset(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_preset(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	preset_manitor();
 	return GSACK_OK;
 }
 
-int gsfunc_aes(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){
+int gsfunc_aes(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){
 	int on = cmd ? atoi(cmd) : NO_CHANGE;
 	int ret_on = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
 	aes_konfig(on, ret_on);
 	return GSACK_OK;}
-int gsfunc_msg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_msg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	int snd_on = cmd ? atoi(cmd) : NO_CHANGE;
 	int rcv_on = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
@@ -643,162 +645,162 @@ int gsfunc_msg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
 	int msg_pnam_on = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
 	msg_konfig(snd_on, rcv_on, rcv_screnmgr, msg_pnam_on);
 	return GSACK_OK;}
-int gsfunc_vdi(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
+int gsfunc_vdi(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
 	int ret_on = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
 	vdi_konfig(on, ret_on);
 	return GSACK_OK;}
-int gsfunc_gemdos(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
+int gsfunc_gemdos(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
 	int ret_on = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
 	gemdos_konfig(on, ret_on);
 	return GSACK_OK;}
-int gsfunc_xbios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
+int gsfunc_xbios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
 	int ret_on = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
 	xbios_konfig(on, ret_on);
 	return GSACK_OK;}
-int gsfunc_bios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
+int gsfunc_bios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
 	int ret_on = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
 	bios_konfig(on, ret_on);
 	return GSACK_OK;}
-int gsfunc_opcode(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
+int gsfunc_opcode(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
 	int kurz = (cmd = gs_next(cmd)) != 0L ? atoi(cmd) : NO_CHANGE;
 	opcode_konfig(on, kurz);
 	return GSACK_OK;}
-int gsfunc_timer(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
+int gsfunc_timer(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	int on = cmd ? atoi(cmd) : NO_CHANGE;
 	timer_konfig(on);
 	return GSACK_OK;}
-int gsfunc_set_file(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){
+int gsfunc_set_file(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){
 	if (!cmd || !cmd[0])
 		return GSACK_ERROR;
 	set_file(cmd);	return GSACK_OK;}
-int gsfunc_set_timer(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){
+int gsfunc_set_timer(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){
 	if (!cmd || !cmd[0])
 		return GSACK_ERROR;
 	set_timer(atoi(cmd));
 	return GSACK_OK;}
-int gsfunc_set_bufsize(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd || !cmd[0])
+int gsfunc_set_bufsize(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd || !cmd[0])
 		return GSACK_ERROR;
 	set_bufsize(atol(cmd));
 	return GSACK_OK;}
-int gsfunc_hide_aes(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_hide_aes(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		hide_aes("");
 	else
 		hide_aes(cmd);
 	return GSACK_OK;}
-int gsfunc_hide_vdi(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_hide_vdi(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		hide_vdi("");
 	else
 		hide_vdi(cmd);
 	return GSACK_OK;}
-int gsfunc_hide_gemdos(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_hide_gemdos(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		hide_gemdos("");
 	else
 		hide_gemdos(cmd);
 	return GSACK_OK;}
-int gsfunc_hide_xbios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_hide_xbios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		hide_xbios("");
 	else
 		hide_xbios(cmd);
 	return GSACK_OK;}
-int gsfunc_hide_bios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_hide_bios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		hide_bios("");
 	else
 		hide_bios(cmd);
 	return GSACK_OK;}
-int gsfunc_hide(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_hide(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		hide("");
 	else
 		hide(cmd);
 	return GSACK_OK;}
-int gsfunc_show_aes(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_show_aes(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		show_aes("");
 	else
 		show_aes(cmd);
 	return GSACK_OK;}
-int gsfunc_show_vdi(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_show_vdi(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		show_vdi("");
 	else
 		show_vdi(cmd);
 	return GSACK_OK;}
-int gsfunc_show_gemdos(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_show_gemdos(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		show_gemdos("");
 	else
 		show_gemdos(cmd);
 	return GSACK_OK;}
-int gsfunc_show_xbios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_show_xbios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		show_xbios("");
 	else
 		show_xbios(cmd);
 	return GSACK_OK;}
-int gsfunc_show_bios(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_show_bios(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		show_bios("");
 	else
 		show_bios(cmd);
 	return GSACK_OK;}
-int gsfunc_show(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_show(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		show("");
 	else
 		show(cmd);
 	return GSACK_OK;}
-int gsfunc_hide_msg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_hide_msg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		hide_msg("");
 	else
 		hide_msg(cmd);
 	return GSACK_OK;}
-int gsfunc_show_msg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd)
+int gsfunc_show_msg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd)
 		return GSACK_ERROR;
 	if (cmd[0] == 1)
 		show_msg("");
 	else
 		show_msg(cmd);
 	return GSACK_OK;}
-int gsfunc_hide_prg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd || !cmd[0])
+int gsfunc_hide_prg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd || !cmd[0])
 		return GSACK_ERROR;
 	hide_prg(cmd);
 	return GSACK_OK;}
-int gsfunc_show_prg(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	if (!cmd || !cmd[0])
+int gsfunc_show_prg(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	if (!cmd || !cmd[0])
 		return GSACK_ERROR;
 	show_prg(cmd);
 	return GSACK_OK;}
-int gsfunc_exclude_prgs(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	exclude_prgs();
+int gsfunc_exclude_prgs(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	exclude_prgs();
 	return GSACK_OK;}
-int gsfunc_include_prgs(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p){	include_prgs();
+int gsfunc_include_prgs(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p){	include_prgs();
 	return GSACK_OK;}
-int gsfunc_clear_prgfilter(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_clear_prgfilter(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	clear_prgfilter();
 	return GSACK_OK;}
-int gsfunc_AppGetLongName(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_AppGetLongName(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	dyn_add_string00(&ret->dyn, "Manitor");
 	return GSACK_OK;}
 
-int gsfunc_notify(char *cmd, GSRETURN *ret, int *msg, GS_PARTNER *p)
+int gsfunc_notify(char *cmd, GSRETURN *ret, int16 *msg, GS_PARTNER *p)
 {
 	if (cmd) {
 		DOCK_ITEM *item = &dock_item[0];

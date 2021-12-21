@@ -10,6 +10,7 @@ FUNC xbios_func[] = {
 	{64, "Blitmode", 1, {{T_INT, "mode"}}, FALSE},
 	{136, "buffoper", 1, {{T_INT, "mode"}}, FALSE},
 	{141, "buffptr", 1, {{T_LONG, "ptr"}}, FALSE},
+	{160, "CacheCtrl", 2, {{T_INT, "OpCode"}, {T_INT, "Param"}}, FALSE },
 	{21, "Cursconf", 2, {{T_INT, "func"}, {T_INT, "operand"}}, FALSE},
 	{139, "devconnect", 5, {{T_INT, "src"}, {T_INT, "dst"}, {T_INT, "srcclk"}, {T_INT, "prescale"}, {T_INT, "protocol"}}, FALSE},
 	{42, "DMAread", 4, {{T_LONG, "sector"}, {T_INT, "count"}, {T_ADR, "buf"}, {T_INT, "devno"}}, FALSE},
@@ -56,6 +57,7 @@ FUNC xbios_func[] = {
 	{84, "EsetPalette", 3, {{T_INT, "colornum"}, {T_INT, "count"}, {T_ADR, "palette"}}, FALSE},
 	{80, "EsetShift", 1, {{T_INT, "shiftmode"}}, FALSE},
 	{87, "EsetSmear", 1, {{T_INT, "switch"}}, FALSE},
+	{162, "ExtRsConf", 3, {{T_INT, "command"}, {T_INT, "device"}, {T_LONG, "param"}}, FALSE},
 	{10, "Flopfmt", 9, {{T_ADR, "buf"}, {T_LONG, "filler"}, {T_INT, "devno"}, {T_INT, "spt"}, {T_INT, "trackno"}, {T_INT, "sideno"}, {T_INT, "interlv"}, {T_LONG, "magic"}, {T_INT, "virgin"}}, FALSE},
 	{41, "Floprate", 2, {{T_INT, "drv"}, {T_INT, "seekrate"}}, FALSE},
 	{8, "Floprd", 7, {{T_ADR, "buf"}, {T_LONG, "filler"}, {T_INT, "devno"}, {T_INT, "secno"}, {T_INT, "trackno"}, {T_INT, "sideno"}, {T_INT, "count"}}, FALSE},
@@ -132,6 +134,7 @@ FUNC xbios_func[] = {
 	{31, "Xbtimer", 4, {{T_INT, "timer"}, {T_INT, "control"}, {T_INT, "data"}, {T_ADR, "func"}}, FALSE},
 	{11, "Dbmsg", 3, {{T_INT, "rsrvd"}, {T_INT, "msg_num"}, {T_LONG, "msg_arg"}}, FALSE},
 	{165, "WavePlay", 4, {{T_INT, "flags"}, {T_LONG, "rate"}, {T_ADR, "sptr"}, {T_LONG, "slen"}}, FALSE},
+	{161, "WdgCtrl", 1, {{ T_INT, "OpCode"}}, FALSE},
 	{95, "ValidMode", 1, {{T_INT, "modecode"}}, FALSE},
 	{0, 0L, 0, {0}, FALSE}
 };

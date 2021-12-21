@@ -1,8 +1,8 @@
 #include "manitor.h"
-#include <manilibs\aes\aes.h>
+#include "..\toslib\aes\aes.h"
 #include "gscript.h"
 
-int global[15];
+int16 global[15];
 SYSINFO sysinfo;
 AESINFO aesinfo;
 
@@ -172,7 +172,7 @@ void terminate(int except)
 		free_buffer();
 		if (!except) {
 			gs_deinit();
-			MT_appl_exit(global);
+			appl_exit(global);
 			sysinfo_deinit(&sysinfo);
 			Pterm0();
 		}
@@ -197,7 +197,7 @@ int main(void)
 		return -1;
 	}
 
-	apid = MT_appl_init(global);
+	apid = appl_init(global);
 	if (apid < 0)
 		return -1;
 
@@ -205,14 +205,14 @@ int main(void)
 
 	if (!gs_init()) {
 		sysinfo_deinit(&sysinfo);
-		MT_appl_exit(global);
+		appl_exit(global);
 		return -1;
 	}
 
-	ev.flags = MU_MESAG|MU_TIMER;
-	ev.hi = 0;
+	ev.i.flags = MU_MESAG|MU_TIMER;
+	ev.i.hi = 0;
 
-	dock_pid = MT_appl_find("DOCK    ", global);
+	dock_pid = appl_find("DOCK    ", global);
 	if (dock_pid >= 0) {
 		gs_fill_request(ev.msg, DOCK_SESSION);
 		my_appl_write(dock_pid, ev.msg);
@@ -221,8 +221,8 @@ int main(void)
 	preset_manitor();
 
 	while (1) {
-		ev.lo = timer;
-		which = MT_EvntMulti(&ev, global);
+		ev.i.lo = timer;
+		which = EvntMulti(&ev, global);
 		update_gem_apps();
 		if (which & MU_MESAG) {
 			if (ev.msg[0] == AP_TERM) {

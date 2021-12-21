@@ -1,18 +1,48 @@
 Manitor-History:
 ===============
 
+V1.02 24.04.2003
+================
+- Bei einigen VDI-Funktionen die Parameter nachgetragen. Totzdem fehlen noch
+  bei einigen Funktionen die Ausgabe der Ein- und Ausgabe-Parameter.
+
+
+14.03.2003
+==========
+- Und wieder komplett neu Åbersetzt mit der pctoslib.lib und den
+  aes.lib und vdi.lib von Manfred Lippert. Jetzt scheinen die
+  Ausgabe endlich in Ordnung sein.
+- Messages des CAT-Protokoll eingetragen.
+
+07.04.2003
+==========
+- AES-Messages Parameter nachgetragen: THR_EXIT
+
+06.04.2003
+==========
+- Komplett neu Åbersetzt mit der TOS- und GEM-Lib von Martin ElsÑsser.
+- Neue AES-Funktionen: recalc_cicon_colours, graf_mutlirubber,
+  wind_draw, appl_control
+- AES-Messages Parameter nachgetragen: WINCOM_MSG, bei einigen Messages
+  des CAB-Protokoll
+
+23.03.2003
+==========
+- Die Xbios-Funktionen des Milans (CacheCtrl, WdgCtrl, ExtRsConf)
+  nachgetragen.
+
 4.12.2000:
 =========
 
 - Manitor stÅrzte ab, wenn ein Programm einen "Frename"-Aufruf gemacht
-hat, weil ich bei der Ausgabe der Parameter den ersten Parameter
-("zero") vergessen habe ...
+  hat, weil ich bei der Ausgabe der Parameter den ersten Parameter
+  ("zero") vergessen habe ...
 
 29.7.99:
 =======
 
 - Bei GS_REQUEST/GS_REPLY wurde versehtlich zweimal "version" statt
-"version" und "msgs" ausgegeben.
+  "version" und "msgs" ausgegeben.
 
 V1.01 22.3.99:
 =============
@@ -27,10 +57,10 @@ V1.01 22.3.99:
 ======
 
 - Bug beim FÅllen des Ringbuffers (der ins Logfile geschrieben wird)
-behoben. Daten die "Åber das Ende" des Rings hinausgeschrieben werden
-muûten, wurden am Anfang falsch ergÑnzt. (Da der Ringbuffer normal
-1/2 MB groû ist, trat das Problem auch nur alle 1/2 MB im Logfile
-auf.)
+  behoben. Daten die "Åber das Ende" des Rings hinausgeschrieben werden
+  muûten, wurden am Anfang falsch ergÑnzt. (Da der Ringbuffer normal
+  1/2 MB groû ist, trat das Problem auch nur alle 1/2 MB im Logfile
+  auf.)
 
 V1.0 12.1.99:
 ============

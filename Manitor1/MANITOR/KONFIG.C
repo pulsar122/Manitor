@@ -1,5 +1,5 @@
 #include "manitor.h"
-#include <manilibs\aes\aes.h>
+#include "..\toslib\aes\aes.h"
 #include "gscript.h"
 #include <string.h>
 
@@ -18,7 +18,7 @@ void preset_manitor(void)
 	bios_konfig(DEFAULT_BIOS_TRACE, DEFAULT_SHOW_BIOSRETURNS);
 	opcode_konfig(DEFAULT_SHOW_TRAP, DEFAULT_SHOW_SHORTTRAP);
 	timer_konfig(DEFAULT_SHOW_TIMER);
-	MT_shel_envrn(&env, "MANITORLOG=", global);
+	shel_envrn(&env, "MANITORLOG=", global);
 	if (env)
 		set_file(env);
 	else

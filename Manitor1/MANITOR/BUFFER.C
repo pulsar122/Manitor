@@ -1,5 +1,5 @@
 #include "manitor.h"
-#include <manilibs\aes\aes.h>
+#include "..\toslib\aes\aes.h"
 #include <string.h>
 #include <stdlib.h>
 #include "gscript.h"
@@ -262,7 +262,8 @@ void deinit_buffer(int except)
 	update_buffer();
 	Fclose(log_handle);
 	if (!except) {
-		int msg[8];
+		int16 msg[8];
+
 		msg[0] = SH_WDRAW;
 		msg[3] = (int)laufwerk_offen - 'A';
 		*(long *)&msg[4] = 0L;
