@@ -25,12 +25,13 @@ FUNC gemdos_func[] = {
 	{5, "Cprnout", 1, {{T_INT, "c"}}, FALSE},
 	{7, "Crawcin", 0, {0}, FALSE},
 	{6, "Crawio", 1, {{T_INT, "w"}}, FALSE},
+	{330, "Dchroot", 1, {{T_STR, "path"}}, FALSE},
 	{299, "Dclosedir", 1, {{T_LONG, "dirhnd"}}, FALSE},
 	{304, "Dcntl", 3, {{T_INT, "cmd"}, {T_STR, "path"}, {T_LONG, "arg"}}, FALSE},
 	{57, "Dcreate", 1, {{T_STR, "path"}}, FALSE},
 	{58, "Ddelete", 1, {{T_STR, "path"}}, FALSE},
 	{54, "Dfree", 2, {{T_ADR, "buf"}, {T_DRV1, "drv"}}, FALSE},
-	{316, "Dgetcwd", 3, {{T_ADR, "buf"}, {T_DRV1, "drv"}, {T_INT, "len"}}, FALSE},
+	{315, "Dgetcwd", 3, {{T_ADR, "path"}, {T_DRV1, "drv"}, {T_INT, "len"}}, FALSE},
 	{25, "Dgetdrv", 0, {0}, FALSE},
 	{71, "Dgetpath", 2, {{T_ADR, "buf"}, {T_DRV1, "drv"}}, FALSE},
 	{309, "Dlock", 2, {{T_INT, "mode"}, {T_DRV0, "drv"}}, FALSE},
@@ -40,45 +41,67 @@ FUNC gemdos_func[] = {
 	{338, "Dreadlabel", 3, {{T_STR, "path"}, {T_ADR, "label"}, {T_INT, "len"}}, FALSE},
 	{298, "Drewinddir", 1, {{T_LONG, "dirhnd"}}, FALSE},
 	{14, "Dsetdrv", 1, {{T_DRV0, "drv"}}, FALSE},
+	{333, "Dsetkey", 0, {0}, FALSE},
 	{59, "Dsetpath", 1, {{T_STR, "path"}}, FALSE},
 	{339, "Dwritelabel", 2, {{T_STR, "path"}, {T_STR, "label"}}, FALSE},
 	{322, "Dxreaddir", 5, {{T_INT, "len"}, {T_LONG, "dirhnd"}, {T_ADR, "buf"}, {T_ADR, "xattr"}, {T_ADR, "xret"}}, FALSE},
+	{354, "Faccept", 0, {0}, FALSE},
 	{67, "Fattrib", 3, {{T_STR, "file"}, {T_INT, "wflag"}, {T_INT, "attr"}}, FALSE},
+	{356, "Fbind", 3, {{T_INT, "fd"}, {T_ADR, "addr"}, {T_LONG, "addrlen"}}, FALSE},
 	{306, "Fchmod", 2, {{T_STR, "file"}, {T_INT, "mode"}}, FALSE},
 	{305, "Fchown", 3, {{T_STR, "file"}, {T_INT, "uid"}, {T_INT, "gid"}}, FALSE},
 	{62, "Fclose", 1, {{T_INT, "hnd"}}, FALSE},
-	{260, "Fcntl", 3, {{T_INT, "hnd"}, {T_LONG, "arg"}, {T_INT, "cmd"}}, FALSE},
+	{260, "Fcntl", 3, {{T_INT, "hnd"}, {T_LONG, "arg"}, {T_INT_HEX, "cmd"}}, FALSE},
+	{355, "Fconnect", 0, {0}, FALSE},
 	{60, "Fcreate", 2, {{T_STR, "file"}, {T_INT, "attr"}}, FALSE},
 	{87, "Fdatime", 3, {{T_ADR, "buf"}, {T_INT, "hnd"}, {T_INT, "wflag"}}, FALSE},
 	{65, "Fdelete", 1, {{T_STR, "file"}}, FALSE},
 	{69, "Fdup", 1, {{T_INT, "hnd"}}, FALSE},
 	{70, "Fforce", 2, {{T_INT, "stdh"}, {T_INT, "nonstdh"}}, FALSE},
+	{349, "Ffstat64", 0, {0}, FALSE},
 	{263, "Fgetchar", 2, {{T_INT, "hnd"}, {T_INT, "mode"}}, FALSE},
 	{47, "Fgetdta", 0, {0}, FALSE},
+	{364, "Fgetpeername", 0, {0}, FALSE},
+	{365, "Fgetsockname", 0, {0}, FALSE},
+	{363, "Fgetsockopt", 0, {0}, FALSE},
 	{261, "Finstat", 1, {{T_INT, "hnd"}}, FALSE},
 	{301, "Flink", 2, {{T_STR, "oldname"}, {T_STR, "newname"}}, FALSE},
+	{357, "Flisten", 0, {0}, FALSE},
 	{92, "Flock", 4, {{T_INT, "hnd"}, {T_INT, "mode"}, {T_LONG, "start"}, {T_LONG, "count"}}, FALSE},
 	{294, "Fmidipipe", 3, {{T_INT, "pid"}, {T_INT, "in"}, {T_INT, "out"}}, FALSE},
 	{61, "Fopen", 2, {{T_STR, "file"}, {T_INT, "mode"}}, FALSE},
 	{262, "Foutstat", 1, {{T_INT, "hnd"}}, FALSE},
 	{256, "Fpipe", 1, {{T_ADR, "usrh[2]"}}, FALSE},
+	{346, "Fpoll", 0, {0}, FALSE},
 	{264, "Fputchar", 2, {{T_INT, "hnd"}, {T_LONG, "ch"}, {T_INT, "mode"}}, FALSE},
 	{63, "Fread", 3, {{T_INT, "hnd"}, {T_LONG, "count"}, {T_ADR, "buf"}}, FALSE},
+	{348, "Freadv", 0, {0}, FALSE},
 	{303, "Freadlink", 3, {{T_INT, "len"}, {T_ADR, "buf"}, {T_STR, "name"}}, FALSE},
+	{360, "Frecvfrom", 0, {0}, FALSE},
+	{358, "Frecvmsg", 0, {0}, FALSE},
 	{86, "Frename", 3, {{T_INT, "zero"}, {T_STR, "oldname"}, {T_STR, "newname"}}, FALSE},
 	{66, "Fseek", 3, {{T_LONG, "offset"}, {T_INT, "hnd"}, {T_INT, "mode"}}, FALSE},
 	{285, "Fselect", 3, {{T_INT, "timeout"}, {T_ADR, "rfds"}, {T_ADR, "wfds"}}, FALSE},
+	{359, "Fsendmsg", 0, {0}, FALSE},
+	{361, "Fsendto", 0, {0}, FALSE},
 	{26, "Fsetdta", 1, {{T_ADR, "buf"}}, FALSE},
+	{362, "Fsetsockopt", 0, {0}, FALSE},
 	{78, "Fsfirst", 2, {{T_STR, "fspec"}, {T_INT, "attr"}}, FALSE},
+	{366, "Fshutdown", 0, {0}, FALSE},
 	{79, "Fsnext", 0, {0}, FALSE},
+	{352, "Fsocket", 3, {{T_LONG, "domain"}, {T_LONG, "type"}, {T_LONG, "protocol"}}, FALSE},
+	{353, "Fsocketpair", 0, {0}, FALSE},
+	{331, "Fstat64", 0, {0}, FALSE},
 	{302, "Fsymlink", 2, {{T_STR, "oldname"}, {T_STR, "newname"}}, FALSE},
 	{64, "Fwrite", 3, {{T_INT, "hnd"}, {T_LONG, "count"}, {T_ADR, "buf"}}, FALSE},
+	{347, "Fwritev", 0, {0}, FALSE},
 	{300, "Fxattr", 3, {{T_INT, "flag"}, {T_STR, "name"}, {T_ADR, "xattr"}}, FALSE},
 	{20, "Maddalt", 2, {{T_ADR, "buf"}, {T_LONG, "count"}}, FALSE},
 	{72, "Malloc", 1, {{T_LONG, "count"}}, FALSE},
 	{73, "Mfree", 1, {{T_ADR, "buf"}}, FALSE},
 	{74, "Mshrink", 3, {{T_INT, "zero"}, {T_ADR, "buf"}, {T_LONG, "newsize"}}, FALSE},
 	{68, "Mxalloc", 2, {{T_LONG, "count"}, {T_INT, "mode"}}, FALSE},
+	{124, "Nlock", 0, {0}, FALSE},
 	{289, "Pause", 0, {0}, FALSE},
 	{281, "Pdomain", 1, {{T_INT, "dom"}}, FALSE},
 	{75, "Pexec", 1, {{T_PEXEC, 0L}}, FALSE},
@@ -110,6 +133,7 @@ FUNC gemdos_func[] = {
 	{282, "Psigreturn", 0, {0}, FALSE},
 	{279, "Psigsetmask", 1, {{T_LONG, "mask"}}, FALSE},
 	{0, "Pterm0", 0, {0}, FALSE},
+	{350, "Psysctl", 0, {0}, FALSE},
 	{76, "Pterm", 1, {{T_INT, "retcode"}}, FALSE},
 	{49, "Ptermres", 2, {{T_LONG, "keep"}, {T_INT, "retcode"}}, FALSE},
 	{307, "Pumask", 1, {{T_INT, "mode"}}, FALSE},
@@ -124,7 +148,9 @@ FUNC gemdos_func[] = {
 	{51, "Sconfig", 2, {{T_INT, "mode"}, {T_LONG, "flags"}}, FALSE},
 	{316, "Srealloc", 1, {{T_LONG, "len"}}, FALSE},
 	{32, "Super", 1, {{T_ADR, "stack"}}, FALSE},
-	{340, "Ssystem", 3, {{T_INT, "mode"}, {T_LONG, "arg1"}, {T_LONG, "arg2"}}, FALSE},
+	{336, "Ssync", 0, {0}, FALSE},
+	{340, "Ssystem", 3, {{T_SSYSTEM, "mode"}, {T_LONG_HEX, "arg1"}, {T_LONG_HEX, "arg2"}}, FALSE},
+	{319, "Suptime", 0, {0}, FALSE},
 	{48, "Sversion", 0, {0}, FALSE},
 	{255, "Syield", 0, {0}, FALSE},
 	{290, "Sysconf", 1, {{T_INT, "n"}}, FALSE},
@@ -317,6 +343,8 @@ void show_funcpara(int typ, char *name, void **ptr)
 	case T_APPFINDSTR:
 		{
 			char *str = *((char **)(*ptr))++;
+			long adr = (long)str;
+			long t;
 			fillbuf_para(name);
 			fillbuf_quote(str);
 			if ((long)str > 0L && str[0] == '?' && str[1] == 0 && str[3] == 0) {
@@ -325,6 +353,34 @@ void show_funcpara(int typ, char *name, void **ptr)
 				fillbuf_string(nr);
 				fillbuf(")", 1);
 			}
+			fillbuf(",", 1);
+			ltoa(adr, nr, 10);
+			fillbuf_string(nr);
+			fillbuf(",", 1);
+			t = adr >> 16;
+			ltoa(t, nr, 10);
+			fillbuf_string(nr);
+			fillbuf(",", 1);
+
+			if (adr > 0L && t == -1 ) {
+				fillbuf(" (-1 = ", 7);
+				t = adr &0x00FF;
+				ltoa(adr, nr, 10);
+				fillbuf_string(nr);
+				fillbuf(")", 1);
+			}
+			if (adr > 0L && t == -2 ) {
+				fillbuf(" (-2 = ", 7);
+				t = adr &0x00FF;
+				ltoa(adr, nr, 10);
+				fillbuf_string(nr);
+				fillbuf(")", 1);
+			}
+			if (adr > 0L && t == -3 ) {
+				fillbuf(" (Mode -3", 9);
+				fillbuf(")", 1);
+			}
+
 		}
 		break;
 	case T_STR00:
@@ -493,8 +549,8 @@ void show_funcpara(int typ, char *name, void **ptr)
 		{
 			int val;
 			static BITNAME doex_bits[] = {{SHW_XMDLIMIT, "XMDLIMIT"}, {SHW_XMDNICE, "XMDNICE"}, {SHW_XMDDEFDIR, "XMDDEFDIR"}, {SHW_XMDENV, "XMDENV"}, {SHW_XMDFLAGS, "XMDFLAGS"}, {0, 0L}};
-			static CONSTNAME doex_name[] = {{SHW_NOEXEC, "NOEXEC"}, {SHW_EXEC, "EXEC"}, {SHW_EXEC_ACC, "ACC"}, {SHW_SHUTDOWN, "SHUTDOWN"}, {SHW_RESCHNG, "RESCHNG"}, {SHW_BROADCAST, "BROADCAST"}, {SHW_INFRECGN, "INFRECGN"},
-														{SHW_AESSEND, "AESEND"}, {SHW_THR_CREATE, "THR_CREATE"}, {0, 0L}};
+			static CONSTNAME doex_name[] = {{SHW_NOEXEC, "NOEXEC (0)"}, {SHW_EXEC, "EXEC (1)"}, {SHW_EXEC_ACC, "ACC (3)"}, {SHW_SHUTDOWN, "SHUTDOWN (4)"}, {SHW_RESCHNG, "RESCHNG (5)"},
+			                                {SHW_BROADCAST, "BROADCAST (7)"}, {SHW_INFRECGN, "INFRECGN (9)"},	{SHW_AESSEND, "AESEND (10)"}, {SHW_THR_CREATE, "THR_CREATE"}, {0, 0L}};
 
 			AESPB *pb = *(AESPB **)ptr;
 			int doex_erweitert = FALSE;
@@ -594,7 +650,7 @@ void show_funcpara(int typ, char *name, void **ptr)
 			static BITNAME bitname[] = {{NAME, "NAME"}, {CLOSER, "CLOSER"}, {FULLER, "FULLER"}, {MOVER, "MOVER"},
 													{INFO, "INFO"}, {SIZER, "SIZER"}, {UPARROW, "UPARROW"}, {DNARROW, "DNARROW"},
 													{VSLIDE, "VSLIDE"}, {LFARROW, "LFARROW"}, {RTARROW, "RTARROW"}, {HSLIDE, "HSLIDE"},
-													{HOTCLOSEBOX, "HOTCLOSEBOX"}, {BACKDROP, "BACKDROP"}, {ICONIFIER, "ICONIFIER"},
+													{HOTCLOSEBOX, "HOTCLOSEBOX"}, {BACKDROP, "BACKDROP"}, {ICONIFIER, "ICONIFIER"}, {BORDER, "BORDER"},
 													{0, 0L}};
 			show_bitnames(bitname, *((int *)(*ptr))++, TRUE);
 		}
@@ -604,6 +660,7 @@ void show_funcpara(int typ, char *name, void **ptr)
 		{
 			static CONSTNAME constname[] = {{END_UPDATE, "END_UPDATE"}, {BEG_UPDATE, "BEG_UPDATE"},
 														{END_MCTRL, "END_MCTRL"}, {BEG_MCTRL, "BEG_MCTRL"},
+														{257, "BEG_UPDATE|0x0100"}, {259, "BEG_MCTRL|0x0100"},
 														{0, 0L}};
 			show_constname(constname, *((int *)(*ptr))++);
 		}
@@ -631,7 +688,7 @@ void show_funcpara(int typ, char *name, void **ptr)
 												 {WF_M_BACKDROP, "WF_M_BACKDROP"}, {WF_M_OWNER, "WF_M_OWNER"},
 												 {WF_M_WINDLIST, "WF_M_WINDLIST"}, {WF_MINXYWH, "WF_MINXYWH"},
 												 {WF_SHADE, "WF_SHADE"}, {WF_STACK, "WF_STACK"}, {WF_TOPALL, "WF_TOPALL"},
-												 {WF_BOTTOMALL, "WF_BOTTOMALL"},
+												 {WF_BOTTOMALL, "WF_BOTTOMALL"}, {WF_WINX, "WF_WINX"},
 												 {0, 0L}};
 			show_constname(constname, *((int *)(*ptr))++);
 		}
@@ -1238,6 +1295,74 @@ void show_funcpara(int typ, char *name, void **ptr)
 				itoa(mode, nr, 16);
 				fillbuf_string(nr);
 			}
+		}
+		break;
+	case T_APPL_GETINFO_TYPE:
+		fillbuf_para(name);
+		{
+			static CONSTNAME constname[] = {{0, "AES-Font (0)"}, {1, "small AES-Font (1)"},
+			                                {2, "colors (2)"}, {3, "language (3)"},
+			                                {4, "general info 1 (4)"}, {5, "general info 1 (5)"},
+			                                {6, "general info 3 (6)"}, {7, "MagiC (7)"},
+			                                {8, "mouse (8)"}, {9, "menue (9)"},
+			                                {10, "shel_write (10)"}, {11, "windows (11)"},
+			                                {12, "messages (12)"}, {13, "objects (13)"},
+			                                {14, "MagiC form (14)"}, {64, "extend function (64)"},
+			                                {65, "N.AES function (65)"}, {96, "AES version (96)"},
+			                                {97, "Available WF_OPTS settings (97)"},
+			                                {98, "Available extended AES function (98)"},
+			                                {99, "vailable application options (99)"},
+			                                {22358, "XaAES Version (22358)"}, {22360, "WINX function (22360)"},
+													  {0, 0L}};
+			show_constname(constname, *((int *)(*ptr))++);
+		}
+		break;
+	case T_VQT_EXT_NAME:
+		{
+			int i;
+			
+			fillbuf_para( "font_format" );
+			i = *((int *)(*ptr));
+			i &= 0xff;
+			itoa( i, nr, 16);
+			fillbuf("0x", 2);
+			fillbuf_string(nr);
+			fillbuf_para( ", flags" );
+			i = ((*((int *)(*ptr))++ ) >> 8 ) & 0xff;
+			itoa( i, nr, 16);
+			fillbuf("0x", 2);
+			fillbuf_string(nr);
+/*			
+			fillbuf_para(name);
+			fillbuf("0x", 2);
+			itoa(*((int *)(*ptr))++, nr, 16);
+			fillbuf_string(nr);
+*/
+		}
+		break;
+	case T_SSYSTEM:
+		fillbuf_para(name);
+		{
+			static CONSTNAME constname[] = {{-1, "S_INQUIRE"}, {0, "S_OSNAME"},
+													  {1, "S_OSXNAME"}, {2, "S_OSVERSION"},
+													  {3, "S_OSHEADER"}, {4, "S_OSBUILDDATE"},
+													  {5, "S_OSBUILDTIME"}, {6, "S_OSCOMPILE"},
+													  {7, "S_OSFEATURES"}, {8, "S_GETCOOKIE"},
+													  {9, "S_SETCOOKIE"}, {10, "S_GETLVAL"},
+													  {11, "S_GETWVAL"}, {12, "S_GETBVAL"},
+													  {13, "S_SETLVAL"}, {14, "S_SETWVAL"},
+													  {15, "S_SETBVAL"}, {16, "S_SECLEVEL"},
+													  {17, "S_RUNLEVEL"}, {18, "S_TSLICE"},
+													  {19, "S_FASTLOAD"}, {20, "S_SYNCTIME"},
+													  {21, "S_BLOCKCACHE"}, {22, "S_FLUSHCACHE"},
+													  {23, "S_CTRLCACHE"},
+													  {100, "S_CLOCKUTC"}, {0x54f8, "S_TIOCMGET"},
+													  {900, "S_KNAME"}, {910, "S_CNAME"},
+													  {911, "S_CVERSION"}, {912, "S_CDEFINES"},
+													  {913, "S_COPTIM"},
+													  {1000, "S_DEBUGLEVEL"}, {1001, "S_DEBUGDEVICE"},
+													  {0, 0L}};
+			show_constname(constname, *((int *)(*ptr))++);
 		}
 		break;
 	}

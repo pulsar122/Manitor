@@ -178,6 +178,9 @@ int deinit_biospending(void);
 #define T_COLOR_ENTRY 46
 #define T_GCBITMAP 47
 #define T_TRANSFER_MODE 48
+#define T_APPL_GETINFO_TYPE 49
+#define T_VQT_EXT_NAME 50
+#define T_SSYSTEM 51
 
 typedef struct {
 	int bitmask;

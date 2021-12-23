@@ -1,6 +1,121 @@
 Manitor-History:
 ===============
 
+V1.04 10.10.2014
+================
+
+- Einige Funktionen hinzugenommen und einige Parameter mehr.
+- Scripte fÅr GSExec erstellt.
+
+
+V1.03 29.07.2012
+================
+
+2012-05-28
+----------
+-GEMDOS: - Suptime
+
+2011-02-26
+----------
+-GEMDOS: - Dgetcwd hatte falschen Opcode
+
+2010-11-22
+----------
+- GEMDOS: Ffstat64, Psysctl
+
+2010-09-06
+----------
+- VDI: Im groûen und ganzen die Parameter eingetragen.
+- AES: shel_help
+       
+2010-09-03
+----------
+- VDI: vr_trnfm, vrt_cpyfm
+
+2010-08-14
+----------
+- VDI: vqt_fontinfo
+
+2010-08-01
+----------
+- GEMDOS: Text for the ssystem modes
+
+2010-03-07
+----------
+- VDI: vq_extnd, vq_scrninfo: öbergabe Parameter
+
+2009-08-27
+----------
+- XBIOS: Subfunction fÅr StarTrack (500)
+
+2009-01-07
+----------
+- XBIOS: Trapper
+
+2008-12-31
+---------_
+- AES: wind_get/set: WF_WINX
+- VDI: vqt_width: hnd
+
+2008-12-20
+----------
+- GEMDOS: Nlock
+
+2008-06-01
+----------
+- appl_getinfo erweitert
+- GEMDOS: Dchroot, Fstat64, Dsetkey
+
+2007-12-13
+----------
+- Beim Fcntl wird der Parameter cmd als Hexzahl ausgegeben.
+
+2007-03-18
+----------
+- vsc_form: Handle
+- vrt_cpyfm: Handle, vr_mode
+- vst_arbpt32
+- form_center
+- v_justified falsche Offset des Textes korrigiert.
+- Messages form MyTask
+- Add BORDER by Window kind
+
+02.08.2005
+==========
+- vst_error, vqt_ext_name, vqt_fontinfo add
+- More Info: vqt_name, vqt_xfntinfo, vst_map_mode, vst_charmap, vst_kern
+             vst_track_offset
+
+07.05.2005
+==========
+- Neue VDI-Funktion von NVDI 5 (v_create_driver_info, v_delete_driver_info,
+  v_read_default_settings, v_write_default_settings)
+- Mehr Ausgabe einiger VDI-Funktionen
+
+??.??.????
+==========
+- Die Xbios-Funktionen: CJar
+
+28.08.2004
+==========
+- Bei appl_getinfo der Abfragetyp WINX hinzugefÅgt.
+
+22.05.2004
+==========
+- Bei appl_getinfo wird der Typ der Abfrage beschrieben.
+
+10.05.2004
+==========
+- Message des Document-History-Protokoll eingetragen
+
+04.03.2003
+==========
+- Ssync
+
+03.05.2003
+==========
+- wind_update 'check and set mode' von AES 4.0 ergÑnzt.
+
 V1.02 24.04.2003
 ================
 - Bei einigen VDI-Funktionen die Parameter nachgetragen. Totzdem fehlen noch
@@ -135,9 +250,6 @@ V1.0 12.1.99:
 - RÅckgabeparameter bei AES "prinzipiell" eingebaut.
 
 - Fast alle Eingabeparameter der AES-Funktionen ergÑnzt (auûer bei ein
-  paar WDialog-Funktionen)
-
-- Fast alle Ausgabeparameter der AES-Funktionen ergÑnzt (auûer bei ein
   paar WDialog-Funktionen)
 
 
