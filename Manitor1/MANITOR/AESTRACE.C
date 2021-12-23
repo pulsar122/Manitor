@@ -437,12 +437,12 @@ GEM_MSG gem_msg[] = {
 	{BUBBLEGEM_FONT, "BUBBLEGEM_FONT", 2, {{3, T_INT, "id"}, {4, T_INT, "pt"}}, FALSE},
 
 	{0x0400, "ACC_ID", 4, {{3, T_INT_HEX, "version/group"}, {4, T_STR, "name"}, {6, T_INT, "menu-ID"}, {7, T_INT, "msg7"}}, FALSE},
-	{0x0401, "ACC_OPEN", 0, {0L}, FALSE},
-	{0x0402, "ACC_CLOSE", 0, {0L}, FALSE},
+	{0x0401, "ACC_OPEN", 0, {0}, FALSE},
+	{0x0402, "ACC_CLOSE", 0, {0}, FALSE},
 	{0x0403, "ACC_ACC", 4, {{3, T_INT_HEX, "version/group"}, {4, T_STR, "name"}, {6, T_INT, "menu-ID"}, {7, T_AESID, "apid"}}, FALSE},
-	{0x0404, "ACC_EXIT", 0, {0L}, FALSE},
-	{0x0480, "ACC_REQUEST", 0, {0L}, FALSE},		/* ??? */
-	{0x0481, "ACC_REPLY", 0, {0L}, FALSE},			/* ??? */
+	{0x0404, "ACC_EXIT", 0, {0}, FALSE},
+	{0x0480, "ACC_REQUEST", 0, {0}, FALSE},		/* ??? */
+	{0x0481, "ACC_REPLY", 0, {0}, FALSE},			/* ??? */
 
 	{0x0500, "ACC_ACK", 1, {{3, T_INT, "ok"}}, FALSE},
 	{0x0501, "ACC_TEXT", 1, {{4, T_ADR, "buf"}}, FALSE},
@@ -457,15 +457,15 @@ GEM_MSG gem_msg[] = {
 	{0x0520, "ACC_FORCESDF", 0, {0L}, FALSE},		/* ??? */
 	{0x0521, "ACC_GETSDF", 0, {0L}, FALSE},		/* ??? */
 
-	{0x0708, "[0x0708] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x0709, "[0x0709] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x070a, "[0x070a] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x070b, "[0x070b] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x070c, "[0x070c] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x070d, "[0x070d] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x070e, "[0x070e] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x070f, "[0x070f] H„nisch Modula-2", 0, {0L}, FALSE},
-	{0x0710, "[0x0710] H„nisch Modula-2", 0, {0L}, FALSE},
+	{0x0708, "[0x0708] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x0709, "[0x0709] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x070a, "[0x070a] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x070b, "[0x070b] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x070c, "[0x070c] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x070d, "[0x070d] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x070e, "[0x070e] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x070f, "[0x070f] H„nisch Modula-2", 0, {0}, FALSE},
+	{0x0710, "[0x0710] H„nisch Modula-2", 0, {0}, FALSE},
 
 	{0x0935, "WIND_DATA", 0, {0L}, FALSE},		/* ??? */
 	{0x0936, "DO_WPOPUP", 0, {0L}, FALSE},		/* ??? */
